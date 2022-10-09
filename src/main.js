@@ -16,7 +16,7 @@ const connectHTMLelems = () => { // Podłączenie elementów z HTML
     viewElems.searchButton = getDOMelem('searchButton');
 
     viewElems.weatherCity = getDOMelem('weatherCity');
-    viewElems.weatherIcon - getDOMelem('weatherIcon');
+    viewElems.weatherIcon = getDOMelem('weatherIcon');
 
     viewElems.weatherCurrentTemp = getDOMelem('weatherCurrentTemp');
     viewElems.weatherMaxTemp = getDOMelem('weatherMaxTemp');
@@ -36,11 +36,11 @@ const initializeApp = () => {
 }
 
 const onClickSubmit = () => {
+    fadeInOut();
     let query = viewElems.searchInput.value;
     getWeatherByCity(query).then(data => {
-        console.log(data);
-        switchView();
-    })
+        displayWeatherData(data)
+    });
 }
 
 const onEnterSubmit = event => {
@@ -48,11 +48,21 @@ const onEnterSubmit = event => {
         fadeInOut();
         let query = viewElems.searchInput.value;
         getWeatherByCity(query).then(data => {
-            console.log(data);
-            switchView();
-            fadeInOut()
-        })
+            displayWeatherData(data)
+            });
     }
+}
+
+const displayWeatherData = data => {
+
+    viewElems.weatherCity.innerText = data.location.name;
+    viewElems.weatherIcon.src = data.current.weather_icons[0];
+
+    viewElems.weatherCurrentTemp.innerText = `Temperatura wynosi ${data.current.temperature} °C`;
+    viewElems.weatherMaxTemp.innerText = `Ciśnienie wynosi ${data.current.pressure}`;
+    viewElems.weatherMinTemp.innerText = `Chuj`;
+    switchView();
+    fadeInOut();
 }
 
 const fadeInOut = () => {
@@ -70,7 +80,7 @@ const switchView = () => {
         viewElems.watherForecastView.style.display = 'block';
     }
     else {
-        viewElems.watherSerachView.style.display = 'block';
+        viewElems.watherSerachView.style.display = 'flex';
         viewElems.watherForecastView.style.display = 'none';
     }
 }
@@ -82,4 +92,6 @@ const returnToSerach = () => {
         fadeInOut();
     }, 500);
 }
+
+
 document.addEventListener('DOMContentLoaded', initializeApp);
